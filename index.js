@@ -16,7 +16,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function  run() {
     try {
         await client.connect();
-        console.log('data connect');
+        const partsCollection = client.db('modern_moto').collection('parts');
+
+        app.get('/part', async (req, res) => {
+            const query = {};
+            const cursor = partsCollection.find(query);
+            const parts = await cursor.toArray();
+            res.send(parts);
+        })
     }
     finally {
 
