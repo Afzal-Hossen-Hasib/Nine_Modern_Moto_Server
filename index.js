@@ -18,6 +18,7 @@ async function  run() {
         await client.connect();
 
         const partsCollection = client.db('modern_moto').collection('parts');
+        const myOrderCollection = client.db('modern_moto').collection('myOrder');
 
 
         app.get('/part', async (req, res) => {
@@ -25,15 +26,24 @@ async function  run() {
             const cursor = partsCollection.find(query);
             const parts = await cursor.toArray();
             res.send(parts);
+        })
 
         app.get('/part/:id', async(req, res) => {
-            const id = req.params.id;
-            const query = {_id: ObjectId(id)};
-            const part = await partsCollection.findOne(query);
-            res.send(part);
-        })
+          const id = req.params.id;
+          const query = {_id: ObjectId(id)};
+          const part = await partsCollection.findOne(query);
+          res.send(part);
+      })
 
-        })
+      app.post ('/myorder', async (req, res) => {
+        const myItems = req.body;
+        const result = await myOrderCollection.insertOne(myItems);
+        res.send (result);
+      });
+
+      
+
+
     }
     finally {
 
