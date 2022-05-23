@@ -48,6 +48,13 @@ async function  run() {
         res.send (items);
       });
 
+      app.get ('/myorder/:id', async (req, res) => {
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const productInfo = await myOrderCollection.findOne(query);
+        res.send (productInfo);
+      });
+
       
 
 
