@@ -41,12 +41,13 @@ async function  run() {
         res.send (result);
       });
 
-      app.get ('myorder', async (req, res) => {
-        const query = {};
+      app.get('/myorder', async (req, res) => {
+        const email = req.query.email;
+        const query = { email: email }
         const cursor = myOrderCollection.find(query);
         const items = await cursor.toArray();
-        res.send (items);
-      });
+        res.send(items)
+    });
 
       app.get ('/myorder/:id', async (req, res) => {
         const id = req.params.id;
@@ -55,12 +56,13 @@ async function  run() {
         res.send (productInfo);
       });
 
-      app.delete('myorder/:id', async (req, res) => {
+      app.delete('/myorder/:id', async (req, res) => {
         const id = req.params.id;
-        const query = {_id: ObjectId (id)};
+        const query = { _id: ObjectId(id) };
         const result = await myOrderCollection.deleteOne(query);
-        res.send (result);
-      })
+        res.send(result);
+    })
+
 
 
     }
