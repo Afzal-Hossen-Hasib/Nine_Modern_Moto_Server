@@ -19,6 +19,7 @@ async function  run() {
 
         const partsCollection = client.db('modern_moto').collection('parts');
         const myOrderCollection = client.db('modern_moto').collection('myOrder');
+        const reviewCollection = client.db('modern_moto').collection('review');
 
 
         app.get('/part', async (req, res) => {
@@ -63,6 +64,18 @@ async function  run() {
         res.send(result);
     })
 
+    app.get('/review', async (req, res) => {
+      const query = {};
+      const cursor = reviewCollection.find(query);
+      const review = await cursor.toArray();
+      res.send (review);
+    })
+
+    app.post('/review', async (req, res) => {
+      const allReview = req.body;
+      const result = await reviewCollection.insertOne(allReview);
+      res.send (result);
+    })
 
 
     }
