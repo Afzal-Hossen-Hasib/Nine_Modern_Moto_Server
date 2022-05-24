@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = process.env.PORT||5000;
@@ -20,6 +21,7 @@ async function  run() {
         const partsCollection = client.db('modern_moto').collection('parts');
         const myOrderCollection = client.db('modern_moto').collection('myOrder');
         const reviewCollection = client.db('modern_moto').collection('review');
+        const userCollection = client.db('modern_moto').collection('users');
 
 
         app.get('/part', async (req, res) => {
@@ -27,7 +29,19 @@ async function  run() {
             const cursor = partsCollection.find(query);
             const parts = await cursor.toArray();
             res.send(parts);
-        })
+        });
+
+        app.put ('user/:email', async(req, res) => {
+          const email = req.params.email;
+          const user = req.body;
+          const filter = {email: email};
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: user,
+          };
+          const result = await userCollection.updateOne(filter, updateDoc, options);
+          res.send (result);
+        });
 
         app.get('/part/:id', async(req, res) => {
           const id = req.params.id;
