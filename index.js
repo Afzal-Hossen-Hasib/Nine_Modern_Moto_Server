@@ -40,6 +40,7 @@ async function  run() {
         const reviewCollection = client.db('modern_moto').collection('review');
         const userCollection = client.db('modern_moto').collection('users');
         const paymentCollection = client.db('modern_moto').collection('payments');
+        const profileCollection = client.db('modern_moto').collection('profile');
 
 
         app.get('/part', async (req, res) => {
@@ -54,6 +55,8 @@ async function  run() {
           const result = await partsCollection.insertOne(newPart);
           res.send(result);
         });
+
+
 
         app.delete('/part/:id', async(req, res) => {
           const id = req.params.id;
@@ -132,6 +135,13 @@ async function  run() {
         res.send (result);
       });
 
+      app.get('/myorder', async (req, res) => {
+        const query = {};
+        const cursor = myOrderCollection.find(query);
+        const order = await cursor.toArray();
+        res.send(order);
+    });
+
       app.patch('/myorder/:id', verifyJWT, async (req, res) => {
         const id = req.params.id;
         const payment = req.body;
@@ -175,6 +185,12 @@ async function  run() {
         const result = await myOrderCollection.deleteOne(query);
         res.send(result);
     })
+
+    app.post ('/profile', async (req, res) => {
+      const myProfile = req.body;
+      const result = await profileCollection.insertOne(myProfile);
+      res.send (result);
+    });
 
     app.get('/review', async (req, res) => {
       const query = {};
