@@ -135,13 +135,6 @@ async function  run() {
         res.send (result);
       });
 
-      app.get('/myorder', async (req, res) => {
-        const query = {};
-        const cursor = myOrderCollection.find(query);
-        const order = await cursor.toArray();
-        res.send(order);
-    });
-
       app.patch('/myorder/:id', verifyJWT, async (req, res) => {
         const id = req.params.id;
         const payment = req.body;
@@ -149,7 +142,7 @@ async function  run() {
         const updatedDoc = {
           $set: {
             paid: true,
-            transectionId: payment.transectionId,           
+            transactionId: payment.transactionId,           
           }
         }
         const result = await paymentCollection.insertOne(payment);
@@ -178,6 +171,13 @@ async function  run() {
         const productInfo = await myOrderCollection.findOne(query);
         res.send (productInfo);
       });
+
+      app.get('/allorder', async (req, res) => {
+        const query = {};
+        const cursor = myOrderCollection.find(query);
+        const products = await cursor.toArray();
+        res.send(products);
+    })
 
       app.delete('/myorder/:id', async (req, res) => {
         const id = req.params.id;
